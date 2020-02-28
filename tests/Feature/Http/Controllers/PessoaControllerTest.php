@@ -116,7 +116,7 @@ class PessoaControllerTest extends TestCase
             'identidade' => $rg
         ]);
 
-        $response->assertJsonValidationErrors('cpf');
+        $response->assertJsonValidationErrors('identidade');
 
         $response->assertStatus(422);
     }
