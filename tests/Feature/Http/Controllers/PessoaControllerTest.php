@@ -45,4 +45,42 @@ class PessoaControllerTest extends TestCase
 
         $response->assertStatus(422);
     }
+
+    /**
+     * @test
+     */
+    public function canUpdatePersonUniqueCPF()
+    {
+        factory(Pessoa::class)->create();
+
+        $pessoa = factory(Pessoa::class)->create();
+
+        $response = $this->json('PUT', '/api/pessoas/'.$pessoa->id, [
+            'cpf' => $this->faker->numerify('###.###.###-##')
+        ]);
+
+        $response->assertJsonMissingValidationErrors('cpf');
+
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @test
+     */
+    public function cannotUpdatePersonSameCPF()
+    {
+        factory(Pessoa::class)->create([
+            'cpf' => $cpf = $this->faker->numerify('###.###.###-##')
+        ]);
+
+        $pessoa = factory(Pessoa::class)->create();
+
+        $response = $this->json('PUT', '/api/pessoas/'.$pessoa->id, [
+            'cpf' => $cpf
+        ]);
+
+        $response->assertJsonValidationErrors('cpf');
+
+        $response->assertStatus(422);
+    }
 }

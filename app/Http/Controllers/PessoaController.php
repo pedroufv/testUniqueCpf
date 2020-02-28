@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PessoaStoreRequest;
+use App\Http\Requests\PessoaUpdateRequest;
+use App\Http\Resources\PessoaResource;
 use App\Pessoa;
 use Illuminate\Http\Request;
 
@@ -32,15 +34,11 @@ class PessoaController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  PessoaStoreRequest  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return PessoaResource
      */
     public function store(PessoaStoreRequest $request)
     {
-        try {
-            return Pessoa::create($request->validated());
-        } catch (\Exception $exception) {
-            return response()->json(['message' => $exception->getMessage()], 500);
-        }
+        return new PessoaResource(Pessoa::create($request->validated()));
     }
 
     /**
@@ -68,13 +66,15 @@ class PessoaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  PessoaUpdateRequest  $request
+     * @param  Pessoa  $pessoa
+     * @return PessoaResource
      */
-    public function update(Request $request, $id)
+    public function update(PessoaUpdateRequest $request, Pessoa $pessoa)
     {
-        //
+        $pessoa->update($request->validated());
+
+        return new PessoaResource($pessoa);
     }
 
     /**
