@@ -27,6 +27,7 @@ class PessoaUpdateRequest extends FormRequest
 
         return [
             'cpf' => "required|min:11|max:14|unique:pessoas,cpf,{$pessoa->id},id",
+            'identidade' => "sometimes|required|min:7|max:14|unique:pessoas,identidade,{$pessoa->id},id",
         ];
     }
 }

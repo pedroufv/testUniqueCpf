@@ -17,9 +17,7 @@ class CreatePessoasTable extends Migration
             $table->bigIncrements('id');
             $table->string('nome', 100)->nullable();
             $table->string('cpf', 11)->unique();
-            $table->string('identidade', 14)
-                ->unique()
-                ->nullable();
+            $table->string('identidade', 14)->nullable();
             $table->string('cep', 8)->nullable();
             $table->string('end_residencial', 100)->nullable();
             $table->string('bairro', 50)->nullable();

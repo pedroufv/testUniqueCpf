@@ -15,6 +15,23 @@ class PessoaControllerTest extends TestCase
     /**
      * @test
      */
+    public function canStorePerson()
+    {
+        $pessoa = factory(Pessoa::class)->make([
+            'identidade' => $this->faker->numerify('##.###.###'),
+        ]);
+
+        $response = $this->post('/api/pessoas', $pessoa->toArray());
+
+        $response->assertJsonMissingValidationErrors('cpf');
+        $response->assertJsonMissingValidationErrors('identidade');
+
+        $response->assertStatus(201);
+    }
+
+    /**
+     * @test
+     */
     public function canStorePersonUniqueCPF()
     {
         $pessoa = factory(Pessoa::class)->make();
@@ -77,6 +94,26 @@ class PessoaControllerTest extends TestCase
 
         $response = $this->json('PUT', '/api/pessoas/'.$pessoa->id, [
             'cpf' => $cpf
+        ]);
+
+        $response->assertJsonValidationErrors('cpf');
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * @test
+     */
+    public function cannotUpdatePersonSameIdentidade()
+    {
+        factory(Pessoa::class)->create([
+            'identidade' => $rg = $this->faker->numerify('##.###.###')
+        ]);
+
+        $pessoa = factory(Pessoa::class)->create();
+
+        $response = $this->json('PUT', '/api/pessoas/'.$pessoa->id, [
+            'identidade' => $rg
         ]);
 
         $response->assertJsonValidationErrors('cpf');

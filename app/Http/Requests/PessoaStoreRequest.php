@@ -25,6 +25,7 @@ class PessoaStoreRequest extends FormRequest
     {
         return [
             'cpf' => "required|min:11|max:14|unique:pessoas",
+            'identidade' => "sometimes|required|min:7|max:14|unique:pessoas",
         ];
     }
 }
